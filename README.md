@@ -4,9 +4,9 @@ A Demo App for Muving People
 ---
 ### Make sure to add the following to your podfile
 
-pod 'Firebase/Storage'
-pod 'Firebase/Analytics'
-pod 'FirebaseUI/Storage'
+* pod 'Firebase/Storage'
+* pod 'Firebase/Analytics'
+* pod 'FirebaseUI/Storage'
 
 Save the file and run "pod install" on the terminal. 
 
