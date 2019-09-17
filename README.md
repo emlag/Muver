@@ -21,10 +21,10 @@ firestore.
     
 **Controller:**
 
-DiverTableViewController: A view that shows the profile of a driver. Currently it looks up the
-driver's name in the database and retrives his/her picture using Firebase Storage and Firebase
-StorageUI.This class also holds a representation of a MuverUser, which has been passed from 
-RiderTableViewController
+* DiverTableViewController: A view that shows the profile of a driver. Currently it looks up the
+  driver's name in the database and retrives his/her picture using Firebase Storage and Firebase
+  StorageUI.This class also holds a representation of a MuverUser, which has been passed from 
+  RiderTableViewController
   
 * RiderTableViewController: A list of available drivers. View didLoad calls loadDriverNames.
 
