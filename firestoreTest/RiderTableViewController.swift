@@ -19,7 +19,6 @@ class RiderTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         loadDriverNames()
     }
 
@@ -31,7 +30,6 @@ class RiderTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return allUsers.count
     }
 
@@ -45,6 +43,7 @@ class RiderTableViewController: UITableViewController {
     
     @IBAction func addDriver(_ sender: Any)
     {
+        //1. Create an alert
         let alert = UIAlertController(title: "Driver Info", message: "Enter your name", preferredStyle: .alert)
         
         //2. Add the text field. You can configure it however you need.
@@ -57,6 +56,7 @@ class RiderTableViewController: UITableViewController {
             let textField = alert?.textFields![0] // Force unwrapping because we know it exists.
             if let name = textField?.text {
                 
+                //We're creating MuverUser objects instead of passing around strings
                 let newUser: MuverUser = MuverDriver(name: name, ID: "", availability: true)
                 self.allUsers.append(newUser)
                 
@@ -77,12 +77,15 @@ class RiderTableViewController: UITableViewController {
         let destination = segue.destination as? DriverViewController,
         let driverIndex = tableView.indexPathForSelectedRow?.row
         {
+            //Pass the User object of the current user to the next screen.
             destination.currUser = allUsers[driverIndex]
         }
     }
     
     private func loadDriverNames()
     {
+        //Getting data from firebase
+        
         //1. this is the collection that I want to use,
         //that way I dont have to type this out every time
         colRef = Firestore.firestore().collection(MuverConstants.db.DRIVERS_COLL)
@@ -90,18 +93,19 @@ class RiderTableViewController: UITableViewController {
         //2. Initialize names array
         allUsers = []
         
-        //5. only get the documents with available drivers
+        //3. only get the documents with available drivers
         colRef.whereField(MuverConstants.db.MUVERUSER_AVAILABILITY, isEqualTo: true).getDocuments() {
             (availDrivers, err) in
             if let err = err {
                 print("oh no! \(err)")
             } else {
                 for document in availDrivers!.documents {
-//                    let currUser: MuverUser = MuverDriver(name: document[MuverConstants.db.MUVERUSER_NAME] as! String,
-//                                                          ID: document.documentID,
-//                                                          availability:
-//                                                          document[MuverConstants.db.MUVERUSER_AVAILABILITY] as! Bool)
+                    //4. With the data that you get from firestore, which is a dictionary,
+                    //we'll use one of MuverUser's(parent of MuverDriver) constructors to create the
+                    //object with the necessary information.
                     let currUserSimple = MuverDriver(data: document.data())
+                    
+                    //add that user to our array of MuverUsers
                     self.allUsers.append(currUserSimple)
                 }
             }
@@ -112,8 +116,8 @@ class RiderTableViewController: UITableViewController {
     }
     
     func addDriverToDB(user: MuverUser ) {
+        //This is a helper function to create a document for this user in Firestore
         colRef = Firestore.firestore().collection(MuverConstants.db.DRIVERS_COLL)
-        
         colRef.addDocument(data: user.toDictionary())
     }
     

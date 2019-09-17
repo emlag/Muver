@@ -27,16 +27,25 @@ class DriverViewController: UIViewController {
         
         print("The user's name is \(String(describing: currUser.name))")
         
+        //Storing things in Firebase Storage
+        //1. Create a reference
         storageRef = Storage.storage().reference()
+        
+        //You can choose to have a place holder image
         let placeholderImage = UIImage(named: "placeholder.jpg")
         
+        //2. Make sure that the user we received from the previous screen has a name
         guard let name = currUser.name else
         {print("Name not found in DB for this user")
             return
             
         }
+        
+        //3. Create a reference to where you want to save this image.
         let reference = storageRef.child("driverImages/\(String(describing: name)).jpg")
         
+        //4. Use the outlet for the image view to use sd_setImage so that you can download the image
+        //and set it within the imageview
         driverImage.sd_setImage(with: reference, placeholderImage: placeholderImage)
     }
     
@@ -51,7 +60,7 @@ class DriverViewController: UIViewController {
     }
     */
     
-    //click to book taxi
+    //This function writes to the database and updates the availability of a driver.
     @IBAction func bookDriver(_ sender: Any) {
         colRef.document(currUser.ID).updateData([MuverConstants.db.MUVERUSER_AVAILABILITY: false])
     }
